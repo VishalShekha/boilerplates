@@ -1,32 +1,10 @@
 # Operating Systems — Placement Revision
 
-> Part 1 of 5 — Introduction, OS Structuring, Process & Thread Fundamentals
-
----
-
-## 1. 30-Minute Quick Revision
-
-Only the highest-leverage facts. If you have 30 minutes before an interview/test, read this.
-
-- 🔴 **OS Role**: Resource manager (CPU, memory, I/O, files) + abstraction layer between hardware and applications.
-- 🔴 **Process vs Thread**: Process = independent execution unit with own address space. Thread = lightweight unit within a process, shares address space with sibling threads.
-- 🔴 **Process States**: New → Ready → Running → Waiting → Terminated.
-- 🔴 **User Mode vs Kernel Mode**: User mode = restricted, no direct hardware access. Kernel mode = full privilege, runs OS code. Mode switch happens via system calls/interrupts/traps.
-- 🔴 **System Call**: Controlled entry point into the kernel (e.g., `read()`, `write()`, `fork()`).
-- 🔴 **Context Switch**: Saving the CPU state of one process/thread and loading another's; pure overhead, no useful work done during it.
-- 🔴 **fork()**: Creates a child process that is (initially) a copy of the parent; returns 0 in child, child PID in parent.
-- 🟠 **PCB (Process Control Block)**: Data structure holding all info the OS needs to manage a process (PID, state, registers, memory info, etc.).
-- 🟠 **Kernel Structuring**: Monolithic (fast, all in kernel space) vs Microkernel (minimal kernel, services in user space, more fault-isolated but slower due to IPC).
-- 🟢 **Interrupt vs System Call**: Interrupt = hardware/asynchronous event. System call = software-initiated, deliberate request by a program.
-- 🟢 **User-level vs Kernel-level threads**: User threads managed by a library (fast, but one blocking call can block all); kernel threads managed by OS (can run in parallel, heavier to create/switch).
-
----
-
 ==================================================
 ## MODULE 1 — INTRODUCTION
 ==================================================
 
-### 4.1 What Does an Operating System Do? 🔴 MUST KNOW
+### 4.1 What Does an Operating System Do?
 
 **Concise:** The OS is a layer of software that manages hardware resources and provides a clean, consistent, abstracted interface for applications to run on.
 
@@ -47,7 +25,7 @@ Core responsibilities:
 
 ---
 
-### 4.2 OS Design Issues 🟠 IMPORTANT
+### 4.2 OS Design Issues
 
 **Concise:** Every OS design must balance performance, protection, portability, and reliability — these goals often conflict.
 
@@ -70,7 +48,7 @@ Modern OS design is shaped heavily by three external pressures (explicitly asked
 
 ---
 
-### 4.3 OS Structuring Methods 🔴 MUST KNOW
+### 4.3 OS Structuring Methods 
 
 #### General OS Architecture
 
@@ -94,7 +72,7 @@ flowchart TB
     OS -->|Privileged Instructions| Hardware
 ```
 
-#### 4.3.1 Monolithic Kernel 🟠 IMPORTANT
+#### 4.3.1 Monolithic Kernel 
 
 **Concise:** The entire OS (process management, memory management, file systems, drivers) runs as a single large program in kernel space.
 
@@ -118,7 +96,7 @@ flowchart TB
 - Cons: A bug/crash in any component (even a driver) can crash the whole system; large attack surface.
 - Examples: Traditional UNIX, Linux (technically monolithic but modular via loadable kernel modules).
 
-#### 4.3.2 Layered Architecture 🟢 GOOD TO KNOW
+#### 4.3.2 Layered Architecture
 
 **Concise:** OS is organized into layers, each built strictly on top of the one below; each layer only calls services of the layer directly beneath it.
 
@@ -137,7 +115,7 @@ flowchart TB
 - Cons: Strict layering adds overhead (a request may traverse many layers); hard to define correct layer boundaries; performance penalty.
 - Example: THE OS (Dijkstra's classic system).
 
-#### 4.3.3 Microkernel Architecture 🔴 MUST KNOW
+#### 4.3.3 Microkernel Architecture 
 
 **Concise:** Kernel is reduced to the bare minimum (IPC, basic scheduling, basic memory management); everything else (file systems, drivers, network stacks) runs as user-space servers.
 
@@ -164,7 +142,7 @@ flowchart TB
 - Cons: More context switches / message passing → higher overhead → historically slower.
 - Examples: Mach, Minix, QNX; modern hybrids: Windows NT (hybrid), macOS/XNU (hybrid).
 
-#### 4.3.4 Modular Kernel 🟢 GOOD TO KNOW
+#### 4.3.4 Modular Kernel
 
 **Concise:** Monolithic-style single address space, but functionality is split into modules that can be loaded/unloaded dynamically at runtime.
 
@@ -172,7 +150,7 @@ flowchart TB
 - Cons: Modules still run in kernel space, so a bad module can still crash the system (less isolation than a true microkernel).
 - Example: Linux Loadable Kernel Modules (LKMs).
 
-#### 4.3.5 Comparison Table 🔴 MUST KNOW
+#### 4.3.5 Comparison Table
 
 | Aspect | Monolithic | Layered | Modular | Microkernel |
 |---|---|---|---|---|
@@ -186,7 +164,7 @@ flowchart TB
 
 ---
 
-### 4.4 Abstractions, Processes, and Resources 🟠 IMPORTANT
+### 4.4 Abstractions, Processes, and Resources 
 
 **Concise:** The OS provides abstractions so programmers don't manage raw hardware directly — a *process* abstracts a running program, and *resources* (CPU, memory, files, devices) are what processes compete for and the OS arbitrates.
 
@@ -210,7 +188,7 @@ flowchart TB
 ## MODULE 2 — OS PRINCIPLES
 ==================================================
 
-### 4.5 System Calls & the Application Call Interface 🔴 MUST KNOW
+### 4.5 System Calls & the Application Call Interface 
 
 **Concise:** A system call is the only sanctioned way for a user-mode program to request a privileged operation from the kernel (e.g., reading a file, creating a process).
 
@@ -235,7 +213,7 @@ sequenceDiagram
 
 ---
 
-### 4.6 Protection: User Mode vs Kernel Mode 🔴 MUST KNOW
+### 4.6 Protection: User Mode vs Kernel Mode
 
 ```mermaid
 flowchart LR
